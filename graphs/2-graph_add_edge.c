@@ -1,7 +1,8 @@
 #include "graphs.h"
 
 vertex_t *get_vertex(graph_t *graph, const char *str);
-edge_t *create_edge(vertex_t *src_vertex, vertex_t *dest_vertex, edge_type_t type);
+edge_t *create_edge(vertex_t *src_vertex, vertex_t *dest_vertex,
+		edge_type_t type);
 
 /**
  * graph_add_edge - Adds an edge between two vertices in the graph.
@@ -65,7 +66,7 @@ vertex_t *get_vertex(graph_t *graph, const char *str)
 
     while (vertex_ptr)
     {
-        if (strcmp(vertex_ptr->str, str) == 0)
+        if (strcmp(vertex_ptr->content, str) == 0)
         {
             return (vertex_ptr);
         }
