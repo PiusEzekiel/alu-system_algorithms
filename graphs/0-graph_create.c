@@ -14,9 +14,9 @@ graph_t *graph_create(void)
 	if (!new_graph)
 		return NULL;
 
-	new_graph->num_vertices = 0;
+	new_graph->nb_vertices = 0;
 
-	new_graph->adj_matrix = NULL;
+	new_graph->vertices = NULL;
 
 	return new_graph;
 }
