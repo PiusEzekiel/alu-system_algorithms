@@ -1,126 +1,56 @@
-
+#include <stdlib.h>
+#include <string.h>
 #include "graphs.h"
 
-vertex_t *get_vertex(graph_t *graph, const char *str);
-
-edge_t *create_edge(vertex_t *src_vertex,
-					vertex_t *dest_vertex, edge_type_t type);
-
 /**
-* graph_add_edge - adds an edge between two vertices to the graph
-* @graph: pointer to graph type
-* @src: string value of source vertex
-* @dest: string value of destination vertex
-* @type: type of edge
-* UNIDIRECTIONAL: one way edge connection between src and dest
-* BIDIRECTIONAL: two way edge connection between src and dest
-*
-* Return: 1 on success, 0 on failure
-*/
-int graph_add_edge(graph_t *graph, const char *src,
+ * graph_add_edge - Adds an edge between two vertices in a graph.
+ *
+ * @graph: Pointer to the graph.
+ * @src: String identifying the source vertex.
+ * @dest: String identifying the destination vertex.
+ * @type: Type of edge (UNIDIRECTIONAL or BIDIRECTIONAL).
+ *
+ * Return: 1 on success, or 0 on failure.
+ */
 
-				const char *dest, edge_type_t type)
+int graph_add_edge(graph_t *graph, const char *src, const char *dest, edge_type_t type)
 {
-	vertex_t *src_vertex, *dest_vertex;
+	vertex_t *src_vertex = NULL;
+	vertex_t *dest_vertex = NULL;
+	edge_t *new_edge;
 
-	edge_t *edge;
-
-	if (graph == NULL || src == NULL || dest == NULL)
+	for (int i = 0; i < graph->num_vertices; i++)
 	{
+		if (strcmp(graph->vertices[i]->str, src) == 0)
+			src_vertex = graph->vertices[i];
+		if (strcmp(graph->vertices[i]->str, dest) == 0)
+			dest_vertex = graph->vertices[i];
+	}
+
+	if (!src_vertex || !dest_vertex)
 		return (0);
-	}
 
-	if (type != UNIDIRECTIONAL && type != BIDIRECTIONAL)
-	{
+	new_edge = malloc(sizeof(edge_t));
+	if (!new_edge)
 		return (0);
-	}
 
-	src_vertex = get_vertex(graph, src);
-	dest_vertex = get_vertex(graph, dest);
-
-	if (src_vertex == NULL || dest_vertex == NULL)
-	{
-		return (0);
-	}
-
-	edge = create_edge(src_vertex, dest_vertex, type);
-	if (edge == NULL)
-	{
-		return (0);
-	}
-
-	src_vertex->nb_edges += 1;
-	dest_vertex->nb_edges += 1;
-
-	return (1);
-}
-
-/**
-* get_vertex - get a vertex from the graph
-* @graph: pointer to graph type
-* @str: string value of the vertex
-*
-* Return: pointer to vertex or NULL
-*/
-vertex_t *get_vertex(graph_t *graph, const char *str)
-{
-	vertex_t *vertex_ptr;
-
-	vertex_ptr = graph->vertices;
-
-	while (vertex_ptr)
-	{
-		if (strcmp(vertex_ptr->content, str) == 0)
-		{
-			return (vertex_ptr);
-		}
-		vertex_ptr = vertex_ptr->next;
-	}
-
-	return (NULL);
-}
-
-/**
-* create_edge - creates an edge between two vertices
-* @src_vertex: pointer to source vertex
-* @dest_vertex: pointer to destination vertex
-* @type: type of edge
-* UNIDIRECTIONAL: one way edge connection between src and dest
-* BIDIRECTIONAL: two way edge connection between src and dest
-*
-* Return: pointer to the new edge
-*/
-edge_t *create_edge(vertex_t *src_vertex,
-					vertex_t *dest_vertex, edge_type_t type)
-{
-	edge_t *edge = malloc(sizeof(edge_t));
-
-	if (edge == NULL)
-	{
-		return (NULL);
-	}
-
-	edge->dest = dest_vertex;
-	edge->next = NULL;
+	new_edge->dest = dest_vertex;
+	new_edge->next = src_vertex->edges;
+	src_vertex->edges = new_edge;
 
 	if (type == BIDIRECTIONAL)
 	{
-
 		edge_t *reverse_edge = malloc(sizeof(edge_t));
-
-		if (reverse_edge == NULL)
+		if (!reverse_edge)
 		{
-			free(edge);
-			return (NULL);
+			free(new_edge);
+			return (0);
 		}
-
+		
 		reverse_edge->dest = src_vertex;
 		reverse_edge->next = dest_vertex->edges;
 		dest_vertex->edges = reverse_edge;
 	}
 
-	edge->next = src_vertex->edges;
-	src_vertex->edges = edge;
-
-	return (edge);
+	return (1);
 }
