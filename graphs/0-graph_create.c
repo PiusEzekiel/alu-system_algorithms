@@ -18,5 +18,5 @@ graph_t *graph_create(void)
 
 	new_graph->vertices = (NULL);
 
-	return new_graph;
+	return (new_graph);
 }
