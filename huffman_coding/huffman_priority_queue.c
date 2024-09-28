@@ -1,5 +1,19 @@
-#include "heap.h"
 #include "huffman.h"
+#include "heap.h"
+
+/**
+ * data_cmp - Comparison function for symbols based on frequency
+ * @a: Pointer to the first node's data
+ * @b: Pointer to the second node's data
+ *
+ * Return: Negative value if a < b, positive if a > b, 0 if equal
+ */
+int data_cmp(void *a, void *b)
+{
+    symbol_t *sym_a = (symbol_t *)((binary_tree_node_t *)a)->data;
+    symbol_t *sym_b = (symbol_t *)((binary_tree_node_t *)b)->data;
+    return (sym_a->freq - sym_b->freq);
+}
 
 /**
  * huffman_priority_queue - Creates a priority queue (min-heap)
