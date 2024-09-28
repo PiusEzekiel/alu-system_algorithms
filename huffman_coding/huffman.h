@@ -20,6 +20,7 @@ typedef struct symbol_s
 symbol_t *symbol_create(char data, size_t freq);
 void binary_tree_delete(binary_tree_node_t *node, void (*free_data)(void *));
 void symbol_delete(void *symbol);
+void symbol_delete(void *data);
 
 heap_t *huffman_priority_queue(char *data, size_t *freq, size_t size);
 int huffman_extract_and_insert(heap_t *priority_queue);

@@ -18,3 +18,15 @@ symbol_t *symbol_create(char data, size_t freq)
 
 	return (symbol);
 }
+
+/**
+ * symbol_delete - Frees a symbol_t structure
+ * @data: Pointer to the symbol_t to free
+ */
+void symbol_delete(void *data)
+{
+	if (data)
+	{
+		free(data);
+	}
+}
