@@ -2,65 +2,55 @@
 #include "heap.h"
 
 /**
- * data_cmp - Comparison function for symbols based on frequency
- * @a: Pointer to the first node's data
- * @b: Pointer to the second node's data
+ * symbol_cmp - Compares two symbols
  *
- * Return: Negative value if a < b, positive if a > b, 0 if equal
+ * @p1: First pointer
+ * @p2: Second pointer
+ *
+ * Return: Difference between the two symbols
  */
-int data_cmp(void *a, void *b)
+static int symbol_cmp(void *p1, void *p2)
 {
-    symbol_t *sym_a = (symbol_t *)((binary_tree_node_t *)a)->data;
-    symbol_t *sym_b = (symbol_t *)((binary_tree_node_t *)b)->data;
-    return (sym_a->freq - sym_b->freq);
+	binary_tree_node_t *n1, *n2;
+	int c1, c2;
+
+	n1 = (binary_tree_node_t *) p1;
+	n2 = (binary_tree_node_t *) p2;
+	c1 = ((symbol_t *) n1->data)->freq;
+	c2 = ((symbol_t *) n2->data)->freq;
+	return (c1 - c2);
 }
 
 /**
- * huffman_priority_queue - Creates a priority queue (min-heap)
- * for Huffman coding
- * @data: An array of characters
- * @freq: An array of associated frequencies
- * @size: The size of the data and freq arrays
- *
- * Return: A pointer to the created min-heap (priority queue),
- * or NULL on failure
+ * huffman_priority_queue -  A function that creates a priority queue for the
+ * Huffman coding algorithm
+ * @data: An array of characters of size `size`
+ * @freq: An array containing the associated frequencies (of size `size`)
+ * @size: size of the array
+ * Return: A pointer to the created min priority_queue_heap (also called
+ * priority queue)
  */
 heap_t *huffman_priority_queue(char *data, size_t *freq, size_t size)
 {
-       	heap_t *heap;
-	binary_tree_node_t *node;
+	heap_t *priority_queue_heap;
+	size_t i = 0;
 	symbol_t *symbol;
-	size_t i;
+	binary_tree_node_t *node, *nested;
 
-	heap = heap_create();
-	if (!heap)
+	priority_queue_heap = heap_create(symbol_cmp);
+	if (priority_queue_heap == NULL || data == NULL || freq == NULL || size == 0)
 		return (NULL);
-
 	for (i = 0; i < size; i++)
 	{
 		symbol = symbol_create(data[i], freq[i]);
-		if (!symbol)
-		{
-			heap_destroy(heap);
+		if (symbol == NULL)
 			return (NULL);
-		}
-
-		node = binary_tree_node(NULL, symbol);
-		if (!node)
-		{
-			free(symbol);
-			heap_destroy(heap);
+		nested = binary_tree_node(NULL, symbol);
+		if (nested == NULL)
 			return (NULL);
-		}
-
-		if (heap_insert(heap, node) == NULL)
-		{
-			free(symbol);
-			free(node);
-			heap_destroy(heap)
+		node = heap_insert(priority_queue_heap, nested);
+		if (node == NULL)
 			return (NULL);
-		}
 	}
-	
-	return (heap);
+	return (priority_queue_heap);
 }
