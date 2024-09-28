@@ -58,8 +58,8 @@ binary_tree_node_t *root, binary_tree_node_t *node)
 		root->right = node;
 		node->parent = root;
 	}
-	else 
-	{	
+	else
+	{
 		if (heap->size % 2 == 0)
 		{
 			heap_insert_recursive(heap, root->left, node);
