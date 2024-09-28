@@ -1,35 +1,41 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "heap.h"
 
-void heap_delete_node(binary_tree_node_t *node, void (*free_data)(void *));
+void binary_tree_delete(binary_tree_node_t *node, void (*free_data)(void *));
 
 /**
-* heap_delete - deletes an entire heap
-* @heap: pointer to heap structure
-* @free_data: pointer to a function that frees the data
-*/
-void heap_delete(heap_t *heap, void (*free_data)(void *))
+ * binary_tree_delete -  a function that deletes an entire binary tree
+ * @node : a pointer to the root node of the tree to delete
+ * @free_data: A pointer to a function that will be used to
+ * free the content of a node
+ */
+void binary_tree_delete(binary_tree_node_t *node, void (*free_data)(void *))
 {
-	if (!heap)
-		return;
-	if (heap->root)
+	if (node)
 	{
-		heap_delete_node(heap->root, free_data);
+		if (node->left)
+			binary_tree_delete(node->left, free_data);
+		if (node->right)
+			binary_tree_delete(node->right, free_data);
+		if (free_data != NULL)
+			free_data(node->data);
+		free(node);
 	}
-	free(heap);
 }
 
 /**
-* heap_delete_node - deletes an entire heap
-* @node: pointer to heap structure
-* @free_data: pointer to a function that frees the data
-*/
-void heap_delete_node(binary_tree_node_t *node, void (*free_data)(void *))
+ * heap_delete - A function that deallocates a heap
+ * @heap: A pointer to the heap to delete
+ * @free_data: A pointer to a function that will be used to
+ * free the content of a node
+ */
+void heap_delete(heap_t *heap, void (*free_data)(void *))
 {
-	if (!node)
+	if (heap == NULL)
 		return;
-	heap_delete_node(node->left, free_data);
-	heap_delete_node(node->right, free_data);
-	if (free_data)
-		free_data(node->data);
-	free(node);
+	binary_tree_delete(heap->root, free_data);
+	heap->size = 0;
+	free(heap);
 }
