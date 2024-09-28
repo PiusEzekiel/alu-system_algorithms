@@ -1,8 +1,13 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "heap.h"
 #include "huffman.h"
+
 /**
- * printArr - prints the Huffman codes array
- * @arr: codes are stored in it
- * @top: length of codes
+ * printArr - Prints the Huffman codes array
+ * @arr: Array storing the codes
+ * @top: Length of the codes
  */
 void printArr(int arr[], int top)
 {
@@ -21,14 +26,13 @@ void printArr(int arr[], int top)
 }
 
 /**
- * print_codes - prints the Huffman codes
- * @root: node of a Huffman tree
- * @arr: codes are stored in it
- * @top: length of codes
+ * print_codes - Prints the Huffman codes for each character
+ * @root: Node of a Huffman tree
+ * @arr: Array storing the codes
+ * @top: Length of the codes
  */
 void print_codes(binary_tree_node_t *root, int arr[], int top)
 {
-
 	if (root->left)
 	{
 		arr[top] = 0;
@@ -40,21 +44,21 @@ void print_codes(binary_tree_node_t *root, int arr[], int top)
 		print_codes(root->right, arr, top + 1);
 	}
 
-	if (((symbol_t *) root->data)->data > 0)
+	if (((symbol_t *)root->data)->data > 0)
 	{
-		printf("%c: ", ((symbol_t *) root->data)->data);
+		printf("%c: ", ((symbol_t *)root->data)->data);
 		printArr(arr, top);
 		printf("\n");
 	}
 }
 
 /**
- * huffman_codes-  A function that build the Huffman tree and
- * print the resulting Huffman codes for each symbol
- * @data: An array of characters of size `size`
- * @freq: An array containing the associated frequencies (of size `size`)
- * @size: size of the array
- * Return: 1 if it succeed, 0 if it fails
+ * huffman_codes - Builds the Huffman tree and prints the resulting codes
+ * @data: Array of characters of size `size`
+ * @freq: Array containing the associated frequencies (of size `size`)
+ * @size: Size of the array
+ *
+ * Return: 1 on success, 0 on failure
  */
 int huffman_codes(char *data, size_t *freq, size_t size)
 {
